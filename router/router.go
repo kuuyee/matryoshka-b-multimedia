@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kuuyee/matryoshka-b-im/model"
 	"github.com/kuuyee/matryoshka-b-multimedia/api"
 )
 
@@ -20,10 +19,10 @@ func errorHandler(c *gin.Context) {
 			errCode = existingCode
 		}
 
-		c.JSON(errCode, &model.Error{
-			Code:    errCode,
-			Message: errString,
-		})
+		c.JSON(errCode, struct {
+			Code    int    `json:"code"`
+			Message string `json:"message"`
+		}{errCode, errString})
 	}
 }
 
