@@ -68,7 +68,7 @@ func TestImageHandler(t *testing.T) {
 				Convey("retrieve image", func() {
 					resReader, mime, err := h.RetrieveData(ident, nil)
 					So(err, ShouldBeNil)
-					So(mime, ShouldEqual, "image/jpeg")
+					So(mime, ShouldEqual, "image/png")
 					img, _, err := image.Decode(resReader)
 					So(err, ShouldBeNil)
 					x, y := img.Bounds().Dx(), img.Bounds().Dy()
@@ -77,7 +77,7 @@ func TestImageHandler(t *testing.T) {
 					Convey("retrieve cached image", func() {
 						resReader, mime, err := h.RetrieveData(ident, nil)
 						So(err, ShouldBeNil)
-						So(mime, ShouldEqual, "image/jpeg")
+						So(mime, ShouldEqual, "image/png")
 						img, _, err := image.Decode(resReader)
 						So(err, ShouldBeNil)
 						x, y := img.Bounds().Dx(), img.Bounds().Dy()
@@ -102,7 +102,7 @@ func TestImageHandler(t *testing.T) {
 						"size": "80",
 					})
 					So(err, ShouldBeNil)
-					So(mime, ShouldEqual, "image/jpeg")
+					So(mime, ShouldEqual, "image/png")
 					img, _, err := image.Decode(resReader)
 					So(err, ShouldBeNil)
 					x, y := img.Bounds().Dx(), img.Bounds().Dy()
