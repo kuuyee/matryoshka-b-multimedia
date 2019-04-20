@@ -1,0 +1,9 @@
+api:
+  listen: ":8080"
+storage:
+  mode: "disk"
+  path: "data/"
+handlers:
+  image:
+    maxsize: 20971520
+    resize: bicubic
