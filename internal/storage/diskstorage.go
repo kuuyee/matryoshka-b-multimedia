@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 )
 
 type Disk struct {
@@ -13,7 +14,7 @@ type Disk struct {
 
 func (d *Disk) joinPath(ident string) (string, error) {
 	newPath := path.Join(d.BasePath, ident)
-	if path.Dir(newPath) != d.BasePath || !path.IsAbs(newPath) {
+	if path.Dir(newPath) != strings.TrimSuffix(d.BasePath, string(os.PathSeparator)) {
 		return "", errors.New("invalid path")
 	}
 	return newPath, nil

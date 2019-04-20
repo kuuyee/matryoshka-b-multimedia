@@ -20,6 +20,7 @@ import (
 
 	"github.com/h2non/filetype"
 
+	"github.com/kuuyee/matryoshka-b-multimedia/internal/mime"
 	"github.com/kuuyee/matryoshka-b-multimedia/internal/storage"
 )
 
@@ -90,17 +91,7 @@ func (h *ImageHandler) imagePreprocess(w io.Writer, rawImageData []byte, mime st
 		}
 		img = resize.Thumbnail(maxX, maxY, img, h.ResizeAlgo)
 	}
-	var encodeOpt *jpeg.Options
-	if qualityStr, exist := param["quality"]; exist {
-		quality, err := strconv.Atoi(qualityStr)
-		if err != nil {
-			return err
-		}
-		if quality <= 0 || quality >= 100 {
-			return errors.New("invalid quality value")
-		}
-	}
-	return jpeg.Encode(w, img, encodeOpt)
+	return png.Encode(w, img)
 }
 
 // WriteData implements H
@@ -120,7 +111,7 @@ func (h *ImageHandler) WriteData(r io.Reader, mime string, param map[string]stri
 		return "", err
 	}
 
-	ident = hasher.SumHex() + ".jpg"
+	ident = hasher.SumHex() + ".png"
 
 	h.KeyedMutex.GetMutex(ident).Lock()
 	defer h.KeyedMutex.GetMutex(ident).Unlock()
@@ -144,18 +135,11 @@ type imageRetrieveParamOpt struct {
 
 func parseImgRetrieveParamOpt(param map[string]string) (*imageRetrieveParamOpt, error) {
 	res := &imageRetrieveParamOpt{
-		Format: "image/jpeg",
+		Format: "image/png",
 	}
 	if format, exist := param["format"]; exist {
-		switch format {
-		case "jpg", "jpeg":
-		case "png":
-			res.Format = "image/png"
-		case "gif":
-			res.Format = "image/gif"
-		case "webp":
-			res.Format = "image/webp"
-		default:
+		res.Format = mime.ExtToMIME(format)
+		if res.Format == "" {
 			return nil, errors.New("format not supported")
 		}
 	}
@@ -175,14 +159,16 @@ func imgIdentAltn(origIdent string, param *imageRetrieveParamOpt) string {
 		newIdent += fmt.Sprintf("_%dx%d", param.X, param.Y)
 	}
 	switch param.Format {
-	case "jpg", "jpeg":
+	case "image/jpg", "image/jpeg":
 		newIdent += ".jpg"
-	case "png":
+	case "image/png":
 		newIdent += ".png"
-	case "gif":
+	case "image/gif":
 		newIdent += ".gif"
-	case "webp":
+	case "image/webp":
 		newIdent += ".webp"
+	default:
+		newIdent += "_" + param.Format
 	}
 	return newIdent
 }
@@ -203,6 +189,10 @@ func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt
 		return err
 	}
 	if opt.X != 0 || opt.Y != 0 {
+		origX, origY := img.Bounds().Dx(), img.Bounds().Dy()
+		if opt.X > uint(origX*3) || opt.Y > uint(origY*3) {
+			return errors.New("requested image too large")
+		}
 		img = resize.Resize(opt.X, opt.Y, img, h.ResizeAlgo)
 	}
 	targetW, err := h.Storage.WriteFile(targetIdent)
@@ -227,13 +217,13 @@ func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt
 }
 
 // RetrieveData implements H
-func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, error) {
+func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, string, error) {
 	if _, hasExplicitFormat := param["format"]; !hasExplicitFormat && strings.HasSuffix(ident, ".gif") {
 		param["format"] = "gif"
 	}
 	opt, err := parseImgRetrieveParamOpt(param)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	targetIdent := imgIdentAltn(ident, opt)
 	exist, err := func() (bool, error) {
@@ -242,14 +232,16 @@ func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.R
 		return h.Storage.ExistFile(targetIdent)
 	}()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if exist {
-		return h.Storage.RetreiveFile(targetIdent)
+		file, err := h.Storage.RetreiveFile(targetIdent)
+		return file, opt.Format, err
 	}
 
 	if err := h.prepareImageAltn(ident, opt); err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return h.Storage.RetreiveFile(targetIdent)
+	file, err := h.Storage.RetreiveFile(targetIdent)
+	return file, opt.Format, err
 }

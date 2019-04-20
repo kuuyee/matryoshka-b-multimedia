@@ -15,3 +15,12 @@ func (a *API) withServiceHandler(c *gin.Context, next func(h handlers.H)) {
 	}
 	next(h)
 }
+
+func (a *API) withIdent(c *gin.Context, next func(ident string)) {
+	i := c.Param("ident")
+	if i == "" {
+		c.AbortWithError(400, errors.New("missing file identififer"))
+		return
+	}
+	next(i)
+}

@@ -12,5 +12,5 @@ type H interface {
 	SizeLimit() int64
 
 	WriteData(r io.Reader, mime string, param map[string]string) (ident string, err error)
-	RetrieveData(ident string, param map[string]string) (io.ReadCloser, error)
+	RetrieveData(ident string, param map[string]string) (io.ReadCloser, string, error)
 }
