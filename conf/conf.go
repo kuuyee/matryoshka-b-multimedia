@@ -11,6 +11,7 @@ import (
 
 var conf *C
 
+// C 服务器配置定义
 type C struct {
 	API struct {
 		Listen string `yaml:"listen"`
@@ -27,8 +28,10 @@ type C struct {
 	} `yaml:"handlers"`
 }
 
+// ResizeFunc is an alias to resize.InterpolationFunction, used to unmarshal interpolation function from config file
 type ResizeFunc resize.InterpolationFunction
 
+// UnmarshalYAML implements yaml.Unmarshaler
 func (r *ResizeFunc) UnmarshalYAML(origUnmarshal func(interface{}) error) error {
 	s := ""
 	if err := origUnmarshal(&s); err != nil {
@@ -51,10 +54,12 @@ func (r *ResizeFunc) UnmarshalYAML(origUnmarshal func(interface{}) error) error 
 	return nil
 }
 
+// GetParsed returns the config file after the initial parse
 func GetParsed() C {
 	return *conf
 }
 
+// Get loads the config file and make configuration available for GetParsed()
 func Get(fn string) C {
 	if conf != nil {
 		return *conf

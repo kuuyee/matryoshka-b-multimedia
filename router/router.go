@@ -24,6 +24,7 @@ func errorHandler(c *gin.Context) {
 	}
 }
 
+// New creates a new gin engine
 func New(api *api.API) *gin.Engine {
 	g := gin.Default()
 

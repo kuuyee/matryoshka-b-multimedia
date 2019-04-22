@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Disk is disk storage
 type Disk struct {
 	BasePath string
 }
@@ -54,6 +55,7 @@ func (d *Disk) ExistFile(ident string) (bool, error) {
 	return true, nil
 }
 
+// NewDiskStorage creates a new disk storage handler
 func NewDiskStorage(basePath string) (*Disk, error) {
 	err := os.MkdirAll(basePath, 0755)
 	if err != nil {

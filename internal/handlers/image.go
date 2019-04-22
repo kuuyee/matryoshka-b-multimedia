@@ -26,6 +26,7 @@ import (
 	"github.com/kuuyee/matryoshka-b-multimedia/internal/storage"
 )
 
+// ImageHandler is handler for image data
 type ImageHandler struct {
 	Storage    storage.S
 	MaxSize    int64

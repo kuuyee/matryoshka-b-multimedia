@@ -25,6 +25,7 @@ func init() {
 	}
 }
 
+// ExtToMIME converts file ext to mime type
 func ExtToMIME(ext string) string {
 	if !strings.HasPrefix(ext, ".") {
 		ext = "." + ext
@@ -36,10 +37,12 @@ func ExtToMIME(ext string) string {
 	return mime
 }
 
+// FileNameToMIME converts file name to mime type
 func FileNameToMIME(fn string) string {
 	return ExtToMIME(path.Ext(fn))
 }
 
+// MIMEToExt converts mime type to file ext
 func MIMEToExt(mime string) string {
 	ext, ok := mimeInverse[mime]
 	if !ok {

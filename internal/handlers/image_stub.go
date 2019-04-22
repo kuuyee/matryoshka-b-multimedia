@@ -1,5 +1,9 @@
 // +build !cgo
 
+/*
+This file is used to enable building with CGO_ENABLED=0, as go-swagger cannot build the project successfully with CGO enabled.
+*/
+
 package handlers
 
 import (

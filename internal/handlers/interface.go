@@ -4,6 +4,7 @@ import (
 	"io"
 )
 
+// H is handler interface
 type H interface {
 	// return handler type
 	Type() string
