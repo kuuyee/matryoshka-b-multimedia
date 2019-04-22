@@ -27,12 +27,15 @@ func errorHandler(c *gin.Context) {
 func New(api *api.API) *gin.Engine {
 	g := gin.Default()
 
-	mediaRoute := g.Group("/media/")
+	restRoute := g.Group("/rest/")
 	{
-		mediaRoute.Use(errorHandler)
-		mediaRoute.GET(":service/:ident", api.RetrieveFile)
-		mediaRoute.GET(":service/:ident/meta", api.FileMeta)
-		mediaRoute.POST(":service", api.PostFile)
+		restRoute.Use(errorHandler)
+		mediaRoute := restRoute.Group("/media/")
+		{
+			mediaRoute.GET(":service/:ident", api.RetrieveFile)
+			mediaRoute.GET(":service/:ident/meta", api.FileMeta)
+			mediaRoute.POST(":service", api.PostFile)
+		}
 	}
 
 	return g

@@ -1,0 +1,23 @@
+SWAGGER_SPECFILE=docs/spec.json
+BUILD_DIR=build/
+LD_FLAGS="-s -w"
+
+test:
+	go test -v -gcflags=-l ./...
+
+vendor-module:
+	go mod vendor
+
+generate-swagger: vendor-module
+	GO111MODULE=off CGO_ENABLED=0 swagger generate spec --scan-models -o ${SWAGGER_SPECFILE}
+
+serve-swagger:
+	swagger serve --flavor=swagger ${SWAGGER_SPECFILE}
+
+download-tools:
+	GO111MODULE=off go get -u github.com/go-swagger/go-swagger/cmd/swagger
+
+build:
+	go build -ldflags=${LD_FLAGS} -o ${BUILD_DIR}multimedia
+
+.PHONY: build test

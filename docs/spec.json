@@ -1,0 +1,295 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "matryoshka 多媒体存储REST-API\n\n\\---\n\n提供对多媒体（语音、图片、视频）等信息的存储，格式转换等服务",
+    "title": "matryoshka multimedia REST-API.",
+    "version": "0.1.0"
+  },
+  "host": "{{IM_REST_HOST}}",
+  "paths": {
+    "/rest/media/{type}": {
+      "post": {
+        "security": [],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "media"
+        ],
+        "summary": "上传文件.",
+        "operationId": "postFile",
+        "parameters": [
+          {
+            "description": "处理参数，另行文档",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "文件类型",
+            "name": "type",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "文件内容",
+            "name": "file",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Meta"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/rest/media/{type}/{ident}": {
+      "get": {
+        "security": [],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "media"
+        ],
+        "summary": "下载文件.",
+        "operationId": "retrieveFile",
+        "parameters": [
+          {
+            "description": "处理参数，另行文档",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "文件类型",
+            "name": "type",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "文件识别符",
+            "name": "ident",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/rest/media/{type}/{ident}/meta": {
+      "get": {
+        "security": [],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "media"
+        ],
+        "summary": "获取文件的基本信息.",
+        "operationId": "retrieveFileMeta",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "文件类型",
+            "name": "type",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "文件识别符",
+            "name": "ident",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Meta"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Error": {
+      "description": "Error为REST-API返回的错误信息",
+      "type": "object",
+      "title": "Error API错误返回",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "Code 错误码",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code",
+          "readOnly": true,
+          "example": 403
+        },
+        "message": {
+          "description": "Message 错误消息",
+          "type": "string",
+          "x-go-name": "Message",
+          "readOnly": true,
+          "example": "权限不足"
+        }
+      },
+      "x-go-package": "github.com/kuuyee/matryoshka-b-multimedia/model"
+    },
+    "Meta": {
+      "description": "Meta为文件的基本信息（identifier，大小，hash等）",
+      "type": "object",
+      "title": "Meta 文件meta信息",
+      "required": [
+        "ident",
+        "type"
+      ],
+      "properties": {
+        "ident": {
+          "description": "Ident 文件identifier",
+          "type": "string",
+          "x-go-name": "Ident",
+          "readOnly": true,
+          "example": "abcde.jpg"
+        },
+        "type": {
+          "description": "Type 文件类型\n\nimage: 图片",
+          "type": "string",
+          "x-go-name": "Type",
+          "readOnly": true,
+          "example": "image"
+        }
+      },
+      "x-go-package": "github.com/kuuyee/matryoshka-b-multimedia/model"
+    }
+  }
+}
