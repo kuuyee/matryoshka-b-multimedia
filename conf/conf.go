@@ -54,6 +54,11 @@ func (r *ResizeFunc) UnmarshalYAML(origUnmarshal func(interface{}) error) error 
 	return nil
 }
 
+// Set sets current config to the provided value
+func Set(newConf C) {
+	conf = &newConf
+}
+
 // GetParsed returns the config file after the initial parse
 func GetParsed() C {
 	return *conf
