@@ -119,13 +119,7 @@ func (h *ImageHandler) WriteData(r io.Reader, mime string, param map[string]stri
 	h.KeyedMutex.GetMutex(ident).Lock()
 	defer h.KeyedMutex.GetMutex(ident).Unlock()
 
-	fileWriter, err := h.Storage.WriteFile(ident)
-	if err != nil {
-		return "", err
-	}
-	defer fileWriter.Close()
-	_, err = io.Copy(fileWriter, processedImageData)
-	if err != nil {
+	if err := h.Storage.WriteFile(ident, processedImageData); err != nil {
 		return "", err
 	}
 	return ident, nil
@@ -177,11 +171,14 @@ func imgIdentAltn(origIdent string, param *imageRetrieveParamOpt) string {
 }
 
 func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt) error {
-	h.KeyedMutex.GetMutex(ident).RLock()
-	defer h.KeyedMutex.GetMutex(ident).RUnlock()
 	targetIdent := imgIdentAltn(ident, opt)
+	if targetIdent != ident {
+		h.KeyedMutex.GetMutex(ident).RLock()
+		defer h.KeyedMutex.GetMutex(ident).RUnlock()
+	}
 	h.KeyedMutex.GetMutex(targetIdent).Lock()
 	defer h.KeyedMutex.GetMutex(targetIdent).Unlock()
+
 	origReader, err := h.Storage.RetreiveFile(ident)
 	if err != nil {
 		return err
@@ -198,11 +195,8 @@ func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt
 		}
 		img = resize.Resize(opt.X, opt.Y, img, h.ResizeAlgo)
 	}
-	targetW, err := h.Storage.WriteFile(targetIdent)
-	if err != nil {
-		return err
-	}
-	defer targetW.Close()
+
+	targetW := bytes.NewBuffer([]byte{})
 	switch opt.Format {
 	case "image/jpeg":
 		err = jpeg.Encode(targetW, img, nil)
@@ -211,11 +205,17 @@ func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt
 	case "image/webp":
 		err = webp.Encode(targetW, img, nil)
 	default:
-		err = errors.New("unknown format")
+		err = fmt.Errorf("unknown format: %v", opt.Format)
 	}
 	if err != nil {
 		return err
 	}
+
+	err = h.Storage.WriteFile(targetIdent, targetW)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

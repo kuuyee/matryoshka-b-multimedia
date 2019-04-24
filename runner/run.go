@@ -1,6 +1,8 @@
 package runner
 
 import (
+	"log"
+
 	"github.com/kuuyee/matryoshka-b-multimedia/api"
 	"github.com/kuuyee/matryoshka-b-multimedia/conf"
 	"github.com/kuuyee/matryoshka-b-multimedia/internal/handlers"
@@ -12,16 +14,10 @@ import (
 // Run starts the server
 func Run() {
 	serverConf := conf.GetParsed()
-	var storageH storage.S
-	switch serverConf.Storage.Mode {
-	case "disk":
-		var err error
-		storageH, err = storage.NewDiskStorage(serverConf.Storage.Path)
-		if err != nil {
-			panic(err)
-		}
-	default:
-		panic("unknown storage type")
+
+	storageH, err := storage.LoadStorage()
+	if err != nil {
+		log.Panicf("error while loading storage handler: %v", err)
 	}
 
 	api := api.NewAPI()

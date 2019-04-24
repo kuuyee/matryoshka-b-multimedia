@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"bytes"
 	"crypto/rand"
 	"io/ioutil"
 	"testing"
@@ -12,16 +13,10 @@ func storageTest(storage S) {
 	exist, err := storage.ExistFile("not_exist.jpg")
 	So(err, ShouldBeNil)
 	So(exist, ShouldBeFalse)
-	fileWriter, err := storage.WriteFile("test_file.txt")
-	So(err, ShouldBeNil)
-	So(fileWriter, ShouldNotBeNil)
 
 	testData := make([]byte, 4096)
 	rand.Read(testData)
-	l, err := fileWriter.Write(testData)
-	So(err, ShouldBeNil)
-	So(l, ShouldEqual, len(testData))
-	err = fileWriter.Close()
+	err = storage.WriteFile("test_file.txt", bytes.NewReader(testData))
 	So(err, ShouldBeNil)
 
 	exist, err = storage.ExistFile("test_file.txt")

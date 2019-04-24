@@ -31,12 +31,20 @@ func (d *Disk) RetreiveFile(ident string) (io.ReadCloser, error) {
 }
 
 // WriteFile implements S
-func (d *Disk) WriteFile(ident string) (io.WriteCloser, error) {
+func (d *Disk) WriteFile(ident string, reader io.Reader) error {
 	path, err := d.joinPath(ident)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return os.Create(path)
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(f, reader)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // ExistFile implements S
