@@ -1,7 +1,6 @@
 package router
 
 import (
-	"log"
 	"bytes"
 	"errors"
 	"strings"
@@ -63,7 +62,6 @@ func New(api *api.API) *gin.Engine {
 				return
 			}
 			loc := location.Get(c)
-			log.Println(loc)
 			swaggerDef = bytes.Replace(swaggerDef, []byte("{{IM_REST_HOST}}"), []byte(loc.Host), 1)
 
 			c.Header("content-type", "application/json")
