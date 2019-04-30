@@ -27,6 +27,10 @@ func Run() {
 		ResizeAlgo: resize.InterpolationFunction(serverConf.Handlers.Image.Resize),
 		KeyedMutex: handlers.NewKeyedRWMutex(),
 	})
+	api.RegisterServiceHandler("audio", &handlers.AudioHandler{
+		Storage:    storageH,
+		KeyedMutex: handlers.NewKeyedRWMutex(),
+	})
 	eng := router.New(api)
 	eng.Run(serverConf.API.Listen)
 }
