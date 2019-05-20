@@ -2,11 +2,9 @@ package conf
 
 import (
 	"errors"
-	"io/ioutil"
 
+	"github.com/jinzhu/configor"
 	"github.com/nfnt/resize"
-
-	"github.com/go-yaml/yaml"
 )
 
 var conf *C
@@ -69,12 +67,9 @@ func Get(fn string) C {
 	if conf != nil {
 		return *conf
 	}
-	d, err := ioutil.ReadFile(fn)
-	if err != nil {
-		panic(err)
-	}
+
 	cData := new(C)
-	if err := yaml.Unmarshal(d, cData); err != nil {
+	if err := configor.New(&configor.Config{ENVPrefix: "IM_MULTIMEDIA"}).Load(cData, fn); err != nil {
 		panic(err)
 	}
 	conf = cData

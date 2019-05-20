@@ -3,6 +3,7 @@ module github.com/kuuyee/matryoshka-b-multimedia
 go 1.12
 
 require (
+	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/chai2010/webp v1.1.0
 	github.com/gin-contrib/location v0.0.0-20190301062650-0462caccbb9c
 	github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
@@ -13,6 +14,7 @@ require (
 	github.com/gobuffalo/packr/v2 v2.2.0
 	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/h2non/filetype v1.0.8
+	github.com/jinzhu/configor v1.0.0
 	github.com/jmattheis/go-packr-swagger-ui v3.20.5+incompatible
 	github.com/json-iterator/go v1.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
