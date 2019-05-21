@@ -1,0 +1,69 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: <P_NAME>
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        name: <P_NAME>
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: <P_NAME>
+          image: <IMAGE_TAG>
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 4096Mi
+            requests:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - containerPort: 8080
+          env:
+            - name: IM_MULTIMEDIA_API_LISTEN
+              value: ":8080"
+            - name: IM_MULTIMEDIA_STORANGE_MODE
+              value: "minio"
+            - name: IM_MULTIMEDIA_STORANGE_URL
+              value: "http://minio-service.default:39000/im-bucket"
+            - name: IM_MULTIMEDIA_STORANGE_ACCESSKEY
+              value: "ZTPWRZ19H2WBYUGI9B8S"
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: minio-secret
+              #     key: accessKey
+            - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
+              value: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: minio-secret
+              #     key: secretKey
+            - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
+              value: minio
+            - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
+              value: "20971520"
+            - name: IM_MULTIMEDIA_HANDLERS_IMAGE_RESIZE
+              value: "bicubic"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <P_NAME>
+spec:
+  type: NodePort
+  ports:
+    - port: 40001
+      nodePort: 40001
+      targetPort: 8080
+  selector:
+    name: <P_NAME>
