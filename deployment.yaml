@@ -36,13 +36,13 @@ spec:
             - name: IM_MULTIMEDIA_STORANGE_URL
               value: "http://minio-service.default:39000/im-bucket"
             - name: IM_MULTIMEDIA_STORANGE_ACCESSKEY
-              # value: "ZTPWRZ19H2WBYUGI9B8S"
+              # value: <ACCESSKEY>
               valueFrom:
                 secretKeyRef:
                   name: minio-secret
                   key: accessKey
             - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
-              # value: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
+              # value: <SECRETKEY>
               valueFrom:
                 secretKeyRef:
                   name: minio-secret
