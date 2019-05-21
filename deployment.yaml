@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: <P_NAME>
+  name: multimedia
 spec:
   replicas: 1
   strategy:
@@ -11,12 +11,12 @@ spec:
   template:
     metadata:
       labels:
-        name: <P_NAME>
+        name: multimedia
     spec:
       imagePullSecrets:
         - name: registry-secret
       containers:
-        - name: <P_NAME>
+        - name: multimedia
           image: <IMAGE_TAG>
           imagePullPolicy: IfNotPresent
           resources:
@@ -36,17 +36,17 @@ spec:
             - name: IM_MULTIMEDIA_STORANGE_URL
               value: "http://minio-service.default:39000/im-bucket"
             - name: IM_MULTIMEDIA_STORANGE_ACCESSKEY
-              value: "ZTPWRZ19H2WBYUGI9B8S"
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: minio-secret
-              #     key: accessKey
+              # value: "ZTPWRZ19H2WBYUGI9B8S"
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: accessKey
             - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
-              value: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: minio-secret
-              #     key: secretKey
+              # value: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: secretKey
             - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
               value: minio
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
@@ -58,12 +58,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: <P_NAME>
+  name: multimedia-service
 spec:
   type: NodePort
   ports:
-    - port: 40001
-      nodePort: 40001
+    - port: 40004
+      nodePort: 40004
       targetPort: 8080
   selector:
-    name: <P_NAME>
+    name: multimedia
