@@ -15,8 +15,10 @@ type C struct {
 		Listen string `yaml:"listen"`
 	} `yaml:"api"`
 	Storage struct {
-		Mode string `yaml:"mode"`
-		Path string `yaml:"path"`
+		Mode      string `yaml:"mode"`
+		URL       string `yaml:"url"`
+		AccessKey string `yaml:"accessKey"`
+		SecretKey string `yaml:"secretKey"`
 	} `yaml:"storage"`
 	Handlers struct {
 		Image struct {

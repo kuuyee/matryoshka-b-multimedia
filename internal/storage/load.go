@@ -17,22 +17,20 @@ func LoadStorage() (storageH S, err error) {
 	switch serverConf.Storage.Mode {
 	case "disk":
 		var err error
-		storageH, err = NewDiskStorage(serverConf.Storage.Path)
+		storageH, err = NewDiskStorage(serverConf.Storage.URL)
 		if err != nil {
 			return nil, err
 		}
 		return storageH, nil
 	case "minio":
-		minioURL, err := url.Parse(serverConf.Storage.Path)
+		minioURL, err := url.Parse(serverConf.Storage.URL)
 		if err != nil {
 			return nil, err
 		}
-		accessKey := minioURL.User.Username()
-		secretKey, _ := minioURL.User.Password()
 		useSSL := minioURL.Scheme == "https"
 		bucket := strings.TrimPrefix(minioURL.Path, "/")
 
-		minioClient, err := minio.New(minioURL.Host, accessKey, secretKey, useSSL)
+		minioClient, err := minio.New(minioURL.Host, serverConf.Storage.AccessKey, serverConf.Storage.SecretKey, useSSL)
 		if err != nil {
 			return nil, err
 		}

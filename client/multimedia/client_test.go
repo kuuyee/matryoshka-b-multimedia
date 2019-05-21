@@ -26,7 +26,7 @@ func TestMultimediaClient(t *testing.T) {
 	serverConf.Handlers.Image.MaxSize = 100 << 20
 	serverConf.Handlers.Image.Resize = conf.ResizeFunc(resize.Bicubic)
 	serverConf.Storage.Mode = "disk"
-	serverConf.Storage.Path, _ = ioutil.TempDir("", "mm_test")
+	serverConf.Storage.URL, _ = ioutil.TempDir("", "mm_test")
 	conf.Set(serverConf)
 
 	go runner.Run()

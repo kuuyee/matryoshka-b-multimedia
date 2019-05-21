@@ -2,7 +2,9 @@ api:
   listen: ":8080"
 storage:
   mode: "disk"
-  path: "data/"
+  url: "data"
+  accessKey: "ZTPWRZ19H2WBYUGI9B8S"
+  secretKey: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
 handlers:
   image:
     maxsize: 20971520
