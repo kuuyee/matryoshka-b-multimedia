@@ -1,6 +1,6 @@
 SWAGGER_SPECFILE=docs/spec.json
 BUILD_DIR=build/
-LD_FLAGS="-s -w"
+LD_FLAGS='-s -w -extldflags "-static"'
 
 test:
 	go test -v -gcflags=-l ./...
@@ -21,7 +21,7 @@ serve-swagger:
 download-tools:
 	GO111MODULE=off go get -u github.com/go-swagger/go-swagger/cmd/swagger
 
-build: pack-data
-	go build -ldflags=${LD_FLAGS} -o ${BUILD_DIR}multimedia
+build:
+	go build -tags netgo -ldflags=${LD_FLAGS} -o ${BUILD_DIR}multimedia
 
 .PHONY: build test
