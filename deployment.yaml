@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: multimedia
+  name: gomk-b-multimedia
 spec:
   replicas: 1
   strategy:
@@ -11,12 +11,12 @@ spec:
   template:
     metadata:
       labels:
-        name: multimedia
+        name: gomk-b-multimedia
     spec:
       imagePullSecrets:
         - name: registry-secret
       containers:
-        - name: multimedia
+        - name: gomk-b-multimedia
           image: <IMAGE_TAG>
           imagePullPolicy: IfNotPresent
           resources:
@@ -58,7 +58,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: multimedia-service
+  name: gomk-b-multimedia-service
 spec:
   type: NodePort
   ports:
@@ -66,4 +66,4 @@ spec:
       nodePort: 40004
       targetPort: 8080
   selector:
-    name: multimedia
+    name: gomk-b-multimedia
