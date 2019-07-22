@@ -31,6 +31,9 @@ func Run() {
 		Storage:    storageH,
 		KeyedMutex: handlers.NewKeyedRWMutex(),
 	})
+	api.RegisterServiceHandler("binary", &handlers.BinaryHandler{
+		Storage: storageH,
+	})
 	eng := router.New(api)
 	eng.Run(serverConf.API.Listen)
 }
