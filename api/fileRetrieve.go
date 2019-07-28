@@ -68,6 +68,7 @@ func (a *API) RetrieveFile(c *gin.Context) {
 				return
 			}
 			c.Header("content-type", mime)
+			c.Header("cache-control", "max-age=2592000")
 			io.Copy(c.Writer, fileOutput)
 		})
 	})
