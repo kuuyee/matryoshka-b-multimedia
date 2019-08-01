@@ -67,22 +67,3 @@ spec:
       targetPort: 8080
   selector:
     name: gomk-b-multimedia
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: <P_NAME>-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-body-size: 1024m
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite /mb/multimedia/(.*) /$1 break;
-spec:
-  rules:
-    - host: gomk.io
-      http:
-        paths:
-          - path: /mb/multimedia
-            backend:
-              serviceName: <P_NAME>-service
-              servicePort: 40004
