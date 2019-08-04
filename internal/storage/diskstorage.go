@@ -63,6 +63,19 @@ func (d *Disk) ExistFile(ident string) (bool, error) {
 	return true, nil
 }
 
+// RenameFile implements S
+func (d *Disk) RenameFile(origIdent string, nextIdent string) error {
+	origPath, err := d.joinPath(origIdent)
+	if err != nil {
+		return err
+	}
+	nextPath, err := d.joinPath(nextIdent)
+	if err != nil {
+		return err
+	}
+	return os.Rename(origPath, nextPath)
+}
+
 // NewDiskStorage creates a new disk storage handler
 func NewDiskStorage(basePath string) (*Disk, error) {
 	err := os.MkdirAll(basePath, 0755)

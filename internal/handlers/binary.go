@@ -3,12 +3,24 @@ package handlers
 import (
 	"bytes"
 	"crypto/rand"
-	"encoding/base64"
-	"errors"
+	"crypto/sha256"
 	"io"
+	"math/big"
 
 	"github.com/kuuyee/matryoshka-b-multimedia/internal/storage"
 )
+
+var randChars = []byte("1234567890" + "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randCharStr(lenStr int) string {
+	var w bytes.Buffer
+	lenChars := big.NewInt(int64(len(randChars)))
+	for i := 0; i < lenStr; i++ {
+		index, _ := rand.Int(rand.Reader, lenChars)
+		w.WriteByte(randChars[int(index.Int64())])
+	}
+	return w.String()
+}
 
 type BinaryHandler struct {
 	Storage storage.S
@@ -26,18 +38,17 @@ func (h *BinaryHandler) SizeLimit() int64 {
 
 // WriteData implements H
 func (h *BinaryHandler) WriteData(r io.Reader, mime string, param map[string]string) (ident string, err error) {
-	identEntropy := make([]byte, 512/8)
-	_, err = rand.Read(identEntropy)
-	if err != nil {
-		return "", errors.New("crypto/rand failed to read")
+	tmpObjName := "tmp-" + randCharStr(8)
+	hashObjReader := &hashReader{
+		Hash: sha256.New(),
+		R:    r,
 	}
-	identBytes := bytes.NewBuffer([]byte{})
-	enc := base64.NewEncoder(base64.StdEncoding, identBytes)
-	if _, err := io.Copy(enc, bytes.NewReader(identEntropy)); err != nil {
+	err = h.Storage.WriteFile(tmpObjName, hashObjReader)
+	if err != nil {
 		return "", err
 	}
-	ident = identBytes.String()
-	err = h.Storage.WriteFile(ident, r)
+	ident = hashObjReader.SumHex()
+	err = h.Storage.RenameFile(tmpObjName, ident)
 	return ident, err
 }
 
