@@ -12,6 +12,12 @@ type Meta struct {
 	// required: true
 	// example: abcde.jpg
 	Ident string `json:"ident"`
+	// Length 文件字节数
+	//
+	// read only: true
+	// required: true
+	// example: 1024
+	Length int64 `json:"length"`
 	// Type 文件类型
 	//
 	// image: 图片

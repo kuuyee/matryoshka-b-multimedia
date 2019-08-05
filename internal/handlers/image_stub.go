@@ -38,6 +38,6 @@ func (h *ImageHandler) WriteData(r io.Reader, mime string, param map[string]stri
 }
 
 // RetrieveData implements H
-func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, string, error) {
-	return nil, "", errors.New("cgo is required")
+func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, int64, string, error) {
+	return nil, 0, "", errors.New("cgo is required")
 }

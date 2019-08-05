@@ -76,6 +76,19 @@ func (d *Disk) RenameFile(origIdent string, nextIdent string) error {
 	return os.Rename(origPath, nextPath)
 }
 
+// StatFile implements S
+func (d *Disk) StatFile(ident string) (*FStat, error) {
+	path, err := d.joinPath(ident)
+	if err != nil {
+		return nil, err
+	}
+	stat, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	return &FStat{Length: stat.Size()}, nil
+}
+
 // NewDiskStorage creates a new disk storage handler
 func NewDiskStorage(basePath string) (*Disk, error) {
 	err := os.MkdirAll(basePath, 0755)

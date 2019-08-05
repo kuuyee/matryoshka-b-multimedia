@@ -66,7 +66,7 @@ func TestImageHandler(t *testing.T) {
 				ident, err := h.WriteData(bytes.NewReader(testImageData), "image/png", nil)
 				So(err, ShouldBeNil)
 				Convey("retrieve image", func() {
-					resReader, mime, err := h.RetrieveData(ident, nil)
+					resReader, _, mime, err := h.RetrieveData(ident, nil)
 					So(err, ShouldBeNil)
 					So(mime, ShouldEqual, "image/png")
 					img, _, err := image.Decode(resReader)
@@ -75,7 +75,7 @@ func TestImageHandler(t *testing.T) {
 					So(x, ShouldEqual, origX)
 					So(y, ShouldEqual, origY)
 					Convey("retrieve cached image", func() {
-						resReader, mime, err := h.RetrieveData(ident, nil)
+						resReader, _, mime, err := h.RetrieveData(ident, nil)
 						So(err, ShouldBeNil)
 						So(mime, ShouldEqual, "image/png")
 						img, _, err := image.Decode(resReader)
@@ -86,7 +86,7 @@ func TestImageHandler(t *testing.T) {
 					})
 				})
 				Convey("retrieve webp image", func() {
-					resReader, mime, err := h.RetrieveData(ident, map[string]string{
+					resReader, _, mime, err := h.RetrieveData(ident, map[string]string{
 						"format": "webp",
 					})
 					So(err, ShouldBeNil)
@@ -98,7 +98,7 @@ func TestImageHandler(t *testing.T) {
 					So(y, ShouldEqual, origY)
 				})
 				Convey("retrieve resized image", func() {
-					resReader, mime, err := h.RetrieveData(ident, map[string]string{
+					resReader, _, mime, err := h.RetrieveData(ident, map[string]string{
 						"size": "80",
 					})
 					So(err, ShouldBeNil)

@@ -53,10 +53,14 @@ func (h *BinaryHandler) WriteData(r io.Reader, mime string, param map[string]str
 }
 
 // RetrieveData implements H
-func (h *BinaryHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, string, error) {
+func (h *BinaryHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, int64, string, error) {
+	stat, err := h.Storage.StatFile(ident)
+	if err != nil {
+		return nil, 0, "", err
+	}
 	file, err := h.Storage.RetreiveFile(ident)
 	if err != nil {
-		return nil, "", err
+		return nil, 0, "", err
 	}
-	return file, "application/octet-stream", nil
+	return file, stat.Length, "application/octet-stream", nil
 }

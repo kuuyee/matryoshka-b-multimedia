@@ -24,7 +24,7 @@ func TestBinaryHandler(t *testing.T) {
 		ident, err := h.WriteData(bytes.NewReader(binFileData), "application/octet-stream", nil)
 		So(err, ShouldBeNil)
 
-		retrievedBinFile, format, err := h.RetrieveData(ident, nil)
+		retrievedBinFile, _, format, err := h.RetrieveData(ident, nil)
 		So(err, ShouldBeNil)
 		So(format, ShouldEqual, "application/octet-stream")
 		defer retrievedBinFile.Close()

@@ -220,13 +220,13 @@ func (h *ImageHandler) prepareImageAltn(ident string, opt *imageRetrieveParamOpt
 }
 
 // RetrieveData implements H
-func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, string, error) {
+func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.ReadCloser, int64, string, error) {
 	if _, hasExplicitFormat := param["format"]; !hasExplicitFormat && strings.HasSuffix(ident, ".gif") {
 		param["format"] = "gif"
 	}
 	opt, err := parseImgRetrieveParamOpt(param)
 	if err != nil {
-		return nil, "", err
+		return nil, 0, "", err
 	}
 	targetIdent := imgIdentAltn(ident, opt)
 	exist, err := func() (bool, error) {
@@ -235,16 +235,20 @@ func (h *ImageHandler) RetrieveData(ident string, param map[string]string) (io.R
 		return h.Storage.ExistFile(targetIdent)
 	}()
 	if err != nil {
-		return nil, "", err
+		return nil, 0, "", err
 	}
 	if exist {
 		file, err := h.Storage.RetreiveFile(targetIdent)
-		return file, opt.Format, err
+		return file, 0, opt.Format, err
 	}
 
 	if err := h.prepareImageAltn(ident, opt); err != nil {
-		return nil, "", err
+		return nil, 0, "", err
+	}
+	stat, err := h.Storage.StatFile(targetIdent)
+	if err != nil {
+		return nil, 0, "", err
 	}
 	file, err := h.Storage.RetreiveFile(targetIdent)
-	return file, opt.Format, err
+	return file, stat.Length, opt.Format, err
 }

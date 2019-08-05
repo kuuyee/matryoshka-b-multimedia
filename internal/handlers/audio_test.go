@@ -25,7 +25,7 @@ func TestAudioHandler(t *testing.T) {
 		ident, err := h.WriteData(bytes.NewReader(noiseFileData), "audio/ogg", nil)
 		So(err, ShouldBeNil)
 
-		retrievedNoiseFile, format, err := h.RetrieveData(ident, nil)
+		retrievedNoiseFile, _, format, err := h.RetrieveData(ident, nil)
 		So(err, ShouldBeNil)
 		So(format, ShouldEqual, "audio/ogg")
 		defer retrievedNoiseFile.Close()

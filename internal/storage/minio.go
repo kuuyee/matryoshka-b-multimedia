@@ -45,3 +45,14 @@ func (m MinIO) RenameFile(origIdent string, nextIdent string) error {
 	}
 	return m.Client.RemoveObject(m.BucketName, origIdent)
 }
+
+// StatFile implements S
+func (m MinIO) StatFile(ident string) (*FStat, error) {
+	stat, err := m.Client.StatObject(m.BucketName, ident, minio.StatObjectOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return &FStat{
+		Length: stat.Size,
+	}, nil
+}

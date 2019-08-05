@@ -55,7 +55,7 @@ func (a *API) FileMeta(c *gin.Context) {
 	a.withServiceHandler(c, func(h handlers.H) {
 		a.withIdent(c, func(ident string) {
 			param := queryToParams(c.Request.URL.Query())
-			fileOutput, _, err := h.RetrieveData(ident, param)
+			fileOutput, size, _, err := h.RetrieveData(ident, param)
 			if fileOutput != nil {
 				defer fileOutput.Close()
 			}
@@ -64,8 +64,9 @@ func (a *API) FileMeta(c *gin.Context) {
 				return
 			}
 			c.JSON(200, model.Meta{
-				Ident: ident,
-				Type:  h.Type(),
+				Ident:  ident,
+				Length: size,
+				Type:   h.Type(),
 			})
 		})
 	})
