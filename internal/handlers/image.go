@@ -114,7 +114,7 @@ func (h *ImageHandler) WriteData(r io.Reader, mime string, param map[string]stri
 		return "", err
 	}
 
-	ident = hasher.SumHex() + ".png"
+	ident = hasher.SumHex()
 
 	h.KeyedMutex.GetMutex(ident).Lock()
 	defer h.KeyedMutex.GetMutex(ident).Unlock()

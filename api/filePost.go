@@ -102,8 +102,9 @@ func (a *API) PostFile(c *gin.Context) {
 			return
 		}
 		c.JSON(200, model.Meta{
-			Ident: ident,
-			Type:  h.Type(),
+			Ident:  ident,
+			Type:   h.Type(),
+			Length: formFile.Size,
 		})
 	})
 }
