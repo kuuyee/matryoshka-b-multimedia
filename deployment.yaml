@@ -31,23 +31,23 @@ spec:
           env:
             - name: IM_MULTIMEDIA_API_LISTEN
               value: ":8080"
-            - name: IM_MULTIMEDIA_STORANGE_MODE
+            - name: IM_MULTIMEDIA_STORAGE_MODE
               value: "minio"
-            - name: IM_MULTIMEDIA_STORANGE_URL
+            - name: IM_MULTIMEDIA_STORAGE_URL
               value: "http://minio-service.default:39000/im-bucket"
-            - name: IM_MULTIMEDIA_STORANGE_ACCESSKEY
+            - name: IM_MULTIMEDIA_STORAGE_ACCESSKEY
               # value: <ACCESSKEY>
               valueFrom:
                 secretKeyRef:
                   name: minio-secret
                   key: accessKey
-            - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
+            - name: IM_MULTIMEDIA_STORAGE_SECRETKEY
               # value: <SECRETKEY>
               valueFrom:
                 secretKeyRef:
                   name: minio-secret
                   key: secretKey
-            - name: IM_MULTIMEDIA_STORANGE_SECRETKEY
+            - name: IM_MULTIMEDIA_STORAGE_SECRETKEY
               value: minio
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
               value: "20971520"
