@@ -47,8 +47,6 @@ spec:
                 secretKeyRef:
                   name: minio-secret
                   key: secretKey
-            - name: IM_MULTIMEDIA_STORAGE_SECRETKEY
-              value: minio
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
               value: "20971520"
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_RESIZE
