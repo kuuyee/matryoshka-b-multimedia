@@ -27,10 +27,10 @@ spec:
               cpu: 200m
               memory: 200Mi
           ports:
-            - containerPort: 8080
+            - containerPort: 4023
           env:
             - name: IM_MULTIMEDIA_API_LISTEN
-              value: ":8080"
+              value: ":4023"
             - name: IM_MULTIMEDIA_STORAGE_MODE
               value: "minio"
             - name: IM_MULTIMEDIA_STORAGE_URL
@@ -60,9 +60,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 40004
-      nodePort: 40004
-      targetPort: 8080
+    - port: 44023
+      nodePort: 44023
+      targetPort: 4023
   selector:
     name: gomk-b-multimedia
 ---
@@ -83,4 +83,4 @@ spec:
           - path: /mb/multimedia
             backend:
               serviceName: <P_NAME>-service
-              servicePort: 40004 
+              servicePort: 44023 
