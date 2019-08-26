@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gomk-b-multimedia
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        name: gomk-b-multimedia
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: gomk-b-multimedia
+          image: <IMAGE_TAG>
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 4096Mi
+            requests:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - containerPort: 4023
+          env:
+            - name: IM_MULTIMEDIA_API_LISTEN
+              value: ":4023"
+            - name: IM_MULTIMEDIA_STORAGE_MODE
+              value: "minio"
+            - name: IM_MULTIMEDIA_STORAGE_URL
+              value: "http://10.2.128.239:9000/im-bucket"
+            - name: IM_MULTIMEDIA_STORAGE_ACCESSKEY
+              value: <ACCESSKEY>
+            - name: IM_MULTIMEDIA_STORAGE_SECRETKEY
+              value: <SECRETKEY>
+            - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
+              value: "20971520"
+            - name: IM_MULTIMEDIA_HANDLERS_IMAGE_RESIZE
+              value: "bicubic"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gomk-b-multimedia-service
+spec:
+  type: NodePort
+  ports:
+    - port: 44023
+      nodePort: 44023
+      targetPort: 4023
+  selector:
+    name: gomk-b-multimedia
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: <P_NAME>-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 1024m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite /mb/multimedia/(.*) /rest/$1 break;
+spec:
+  rules:
+    - host: gomk.io
+      http:
+        paths:
+          - path: /mb/multimedia
+            backend:
+              serviceName: <P_NAME>-service
+              servicePort: 44023 
