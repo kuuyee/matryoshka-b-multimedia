@@ -13,7 +13,7 @@ spec:
       labels:
         name: gomk-b-multimedia
     spec:
-      nodeName: 10.2.128.216
+      #nodeName: 10.2.128.216
       imagePullSecrets:
         - name: registry-secret
       containers:
