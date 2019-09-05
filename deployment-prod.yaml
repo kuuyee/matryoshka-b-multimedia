@@ -44,7 +44,13 @@ spec:
               value: "20971520"
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_RESIZE
               value: "bicubic"
+          volumeMounts:
+            - mountPath: /tmp
+              name: data-tmp
       restartPolicy: Always
+      volumes:
+        - name: data-tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -76,4 +82,4 @@ spec:
           - path: /mb/multimedia
             backend:
               serviceName: <P_NAME>-service
-              servicePort: 44023 
+              servicePort: 44023
