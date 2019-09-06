@@ -41,7 +41,7 @@ spec:
             - name: IM_MULTIMEDIA_STORAGE_SECRETKEY
               value: <SECRETKEY>
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_MAXSIZE
-              value: "20971520"
+              value: "1048576000"
             - name: IM_MULTIMEDIA_HANDLERS_IMAGE_RESIZE
               value: "bicubic"
           # volumeMounts:
