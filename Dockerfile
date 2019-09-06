@@ -1,4 +1,4 @@
-FROM alpine
+FROM scratch
 WORKDIR /app
 COPY ./build/multimedia .
 COPY ./multimedia.yml .
