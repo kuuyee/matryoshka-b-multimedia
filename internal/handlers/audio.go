@@ -23,7 +23,7 @@ func (h *AudioHandler) Type() string {
 
 // SizeLimit implements H
 func (h *AudioHandler) SizeLimit() int64 {
-	return 512 << 10
+	return 1024*1024*1024
 }
 
 // WriteData implements H

@@ -33,7 +33,7 @@ func (h *BinaryHandler) Type() string {
 
 // SizeLimit implements H
 func (h *BinaryHandler) SizeLimit() int64 {
-	return 50 << 20
+	return 1024*1024*1024
 }
 
 // WriteData implements H
