@@ -2,7 +2,7 @@ api:
   listen: ":4023"
 storage:
   mode: "minio"
-  url: "10.2.128.7:22004/netdisk"
+  url: "http://10.2.128.7:22004/netdisk"
   accessKey: "gomk"
   secretKey: "b7f45894-2c3c-4633-a74a-c0d42e2fc684"
 handlers:
