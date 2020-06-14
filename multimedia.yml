@@ -1,10 +1,10 @@
 api:
   listen: ":4023"
 storage:
-  mode: "disk"
-  url: "data"
-  accessKey: "ZTPWRZ19H2WBYUGI9B8S"
-  secretKey: "mVUmPizjQbn0Vv2Lxcw3GxJydCyp0QxPq3TOLbXe"
+  mode: "minio"
+  url: "114.67.253.192:22004/netdisk"
+  accessKey: "gomk"
+  secretKey: "b7f45894-2c3c-4633-a74a-c0d42e2fc684"
 handlers:
   image:
     maxsize: 20971520
