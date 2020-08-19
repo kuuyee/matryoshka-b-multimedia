@@ -6,7 +6,7 @@ storage:
   mode: "minio"
   # 当模式为disk时，url为本地存储路径
   # 当模式为minio时，url为minio服务地址+bucket，当bucket不存在时，会自动创建。
-  url: "http://116.196.75.154:9000/im-media"
+  url: "http://10.2.128.4:9000/im-media"
   # minio accessKey 配置
   accessKey: "gomk"
   # minio secretKey 配置
