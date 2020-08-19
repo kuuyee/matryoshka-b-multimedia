@@ -1,6 +1,6 @@
 api:
   # 多媒体服务监听端口
-  listen: ":4023"
+  listen: ":14023"
 storage:
   # 存储支持 [disk,minio]两种模式
   mode: "minio"
